@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 public class Minesweeper {
 	
     private static Game createGame;
-    public static String gameName = "Démineur M1GLSI Groupe 5";
+    public static String gameName = "Démineur M1GLSI - Groupe 5";
     
     // TODO: Fermer l'ancienne instance du jeu lorsqu'on appui sur ré-essayer/rejouer
 
