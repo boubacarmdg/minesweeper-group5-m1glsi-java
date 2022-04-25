@@ -5,9 +5,9 @@ import javax.swing.JOptionPane;
 public class Minesweeper {
 	
     private static Game createGame;
-    public static String gameName = "Démineur M1GLSI Groupe 5";
+    public static String gameName = "DÃ©mineur M1GLSI Groupe 5";
     
-    // TODO: Fermer l'ancienne instance du jeu lorsqu'on appui sur ré-essayer/rejouer
+    // TODO: Fermer l'ancienne instance du jeu lorsqu'on appui sur rÃ©-essayer/rejouer
 
     public static void gameInit(int ...gameParams) {
     	int level = 0;
@@ -18,14 +18,14 @@ public class Minesweeper {
 	    		level = gameParams[1];
 	    		bombs = gameParams[2];
 	    	} else {
-		        Object[] choices = {"Débutant", "Intermédiaire", "Expert"};
+		        Object[] choices = {"DÃ©butant", "IntermÃ©diaire", "Expert"};
 		        level = JOptionPane.showOptionDialog(null,
-		                "Choisir un niveau de difficulté", gameName,
+		                "Choisir un niveau de difficultÃ©", gameName,
 		                JOptionPane.YES_NO_CANCEL_OPTION,
 		                JOptionPane.QUESTION_MESSAGE,
 		                null,
 		                choices,
-		                choices[0]); // Niveau pré-selectionné = débutant
+		                choices[0]); // Niveau prÃ©-selectionnÃ© = dÃ©butant
 		        if(level == -1)
 		            System.exit(0);
 		        
@@ -40,7 +40,7 @@ public class Minesweeper {
 			        	break;
 			        case 2:
 			        	size = 30;
-			        	bombs = 2;
+			        	bombs = 99;
 			        	break;
 		        }
 	    	}
