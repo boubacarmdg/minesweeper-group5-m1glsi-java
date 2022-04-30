@@ -11,38 +11,41 @@ import javax.imageio.ImageIO;
 
 public class Game extends JFrame {
 	
-	    // DÈfinition de nos variables
+	    // D√©finition de nos variables
 	
 	    private static final long serialVersionUID = 1L;
 		private int size; // Nombres de cases
 		private int level; // Niveau de jeu
 		private int bombs; // Nombre de bombes - #bombsInGame
-		private String gameName = Minesweeper.gameName; // Titre de la fenÍtre du jeu
-		private ArrayList<String> refTile = new ArrayList<String>(size); // Liste contenant les rÈfÈrences de chaque case
+		private String gameName = Minesweeper.gameName; // Titre de la fen√™tre du jeu
+		private ArrayList<String> refTile = new ArrayList<String>(size); // Liste contenant les r√©f√©rences de chaque case
 		
 		private JButton[][] gameTiles;  // Conteneur des cases
 	    private JPanel gameInformations;  // Conteneur des inforamtions du jeu
 	    private JPanel gameArea;  // Conteneur des cases du jeu
 	    private JLabel gameFlags;  // Nombre de drapeaux disponibles
-	    private JLabel gameTime;  // DurÈe total du jeu
+	    private JLabel gameTime;  // Dur√©e total du jeu
         private JPanel gameScore; // Conteneur du dernier score du joueur
-	    private JLabel lastScore; // Score de la derniËre partie gagnÈe avec le niveau selectionnÈ
+	    private JLabel lastScore; // Score de la derni√®re partie gagn√©e avec le niveau selectionn√©
 
-	    private int bombsInGame = 0;  // Nombre de bombes prÈsentes dans le jeu
+	    private int bombsInGame = 0;  // Nombre de bombes pr√©sentes dans le jeu
 	    private int[][] tilePosition;  // Position (x,y) d'une case
-	    private boolean[][] isShowed;  // VÈrifie si la case de coordonnÈes (x,y) a dÈj‡ ÈtÈ affichÈe
-	    private int tilesShowed;  // Combien de cases on dÈj‡ ÈtÈ affichÈes
-	    private boolean[][] isFlagged;  // VÈrifie si la case de coordonnÈes (x,y) contient un drapeau
+	    private boolean[][] isShowed;  // V√©rifie si la case de coordonn√©es (x,y) a d√©j√† √©t√© affich√©e
+	    private int tilesShowed;  // Combien de cases on d√©j√† √©t√© affich√©es
+	    private boolean[][] isFlagged;  // V√©rifie si la case de coordonn√©es (x,y) contient un drapeau
+	    private boolean[][] isQuestionMarked;  // V√©rifie si la case avec un drapeau a √©t√© recliqu√©e
 	    
 	    private Image flagImg; // Image du drapeau
 	    private Image flagImgContainer; // Conteneur de l'image du drapeau
 	    private Image bombImg; // Image de la bombe
 	    private Image bombImgContainer; // Conteneur de l'image de la bombe
+	    private Image questionMarkImg; // Image de la bombe
+	    private Image questionMarkImgContainer; // Conteneur de l'image de la bombe
 	
 	    // Customisation du jeu
 	    private Color borderColor = new Color(73, 162, 233); // Couleur de la bordure de la case
-	    private Color tilesAlreadyShowedColor = new Color(228, 229, 228); // Couleur de la case lorsqu'elle a ÈtÈ affichÈe (active state)
-	    private Color tileButtonColor = new Color(208, 209, 209); // Couleur par dÈfaut de la case
+	    private Color tilesAlreadyShowedColor = new Color(228, 229, 228); // Couleur de la case lorsqu'elle a √©t√© affich√©e (active state)
+	    private Color tileButtonColor = new Color(208, 209, 209); // Couleur par d√©faut de la case
 	    private Color tileButtonColorHover = new Color(193, 195, 194); // Couleur de la case lorsqu'on passe la souris dessus (hover state)
 	    private Color tileBombColor = new Color(234, 173, 173); // Couleur de la case contenant une bombe
 	    private String one = "rgb(73, 162, 233)"; // Couleur de la case avec 1 bombe adjacentes
@@ -89,7 +92,7 @@ public class Game extends JFrame {
             }
         }
         
-        // Le nombre ‡ afficher sur la case selectionnÈe en fonction du nombre de bombes qui lui sont adjacentes
+        // Le nombre √† afficher sur la case selectionn√©e en fonction du nombre de bombes qui lui sont adjacentes
         for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
             if (tilePosition[i][j]==-1) {
@@ -109,7 +112,7 @@ public class Game extends JFrame {
         }
     }
 
-    // Fonction qui gÈnËre la fenÍtre du jeu et ses dÈpendances
+    // Fonction qui g√©n√®re la fen√™tre du jeu et ses d√©pendances
     public void container(Game gameEnclosure, int size) {
 
         GameInteractions interactions = new GameInteractions(gameEnclosure);
@@ -124,20 +127,26 @@ public class Game extends JFrame {
 
         isShowed = new boolean[size][size];
         isFlagged = new boolean[size][size];
+        isQuestionMarked = new boolean[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 isShowed[i][j] = false;
                 isFlagged[i][j] = false;
+                isQuestionMarked[i][j] = false;
             }
         }
 
-        // RÈcupÈration des images des bombes et des drapeaux
+        // R√©cup√©ration des images des bombes et des drapeaux
         try {
             flagImg = ImageIO.read(getClass().getResource("assets/red-flag.png"));
             flagImgContainer = flagImg.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
 
             bombImg = ImageIO.read(getClass().getResource("assets/explosion.png"));
             bombImgContainer = bombImg.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+            
+            questionMarkImg = ImageIO.read(getClass().getResource("assets/questionmark.png"));
+            questionMarkImgContainer =  questionMarkImg.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
+
             
         }catch (Exception e){}
 
@@ -147,8 +156,8 @@ public class Game extends JFrame {
         gameInformations.setLayout(box1);
 
 
-        // Affichage de la durÈe totale de la partie en secondes
-        JLabel timeJLabel = new JLabel("DurÈe du jeu: ");
+        // Affichage de la dur√©e totale de la partie en secondes
+        JLabel timeJLabel = new JLabel("Dur√©e du jeu: ");
         gameTime = new JLabel("0");
         gameTime.setAlignmentX(Component.RIGHT_ALIGNMENT);
         gameTime.setHorizontalAlignment(JLabel.LEFT);
@@ -211,14 +220,14 @@ public class Game extends JFrame {
             }
         }
 
-        // On ajoute ‡ la fenÍtre de l'applcation tous les ÈlÈments du jeu
+        // On ajoute √† la fen√™tre de l'applcation tous les √©l√©ments du jeu
         gameWindow.add(gameInformations);
         gameWindow.add(gameArea);
         // gameWindow.add(gameScore);
         gameEnclosure.setContentPane(gameWindow);
         this.setVisible(true);
         
-        // Positionnement alÈatoire des bombes en fonction du nombre de cases et du nombre de bombes initialisÈes
+        // Positionnement al√©atoire des bombes en fonction du nombre de cases et du nombre de bombes initialis√©es
         dispatchBombs(size);
 
         // Chronometre
@@ -227,7 +236,7 @@ public class Game extends JFrame {
 
     }
 
-    // Mise ‡ jour de la durÈe du jeu toutes les secondes
+    // Mise √† jour de la dur√©e du jeu toutes les secondes
     public void getGameTime() {
         String[] time = this.gameTime.getText().split(" ");
         int time0 = Integer.parseInt(time[0]);
@@ -239,31 +248,47 @@ public class Game extends JFrame {
     // Gestion du placement des drapeaux
     public void placeFlag(int x, int y) {
         if(!isShowed[x][y]) {
+        	
             if (isFlagged[x][y]) {
-                gameTiles[x][y].setIcon(null);
-                isFlagged[x][y] = false;
-                int previouslyPositionned = Integer.parseInt(this.gameFlags.getText());
-                ++previouslyPositionned;
-                this.gameFlags.setText(""+previouslyPositionned);
+            	
+                
+                if (isQuestionMarked[x][y]) {
+                		
+                    gameTiles[x][y].setIcon(null);
+                    isFlagged[x][y] = false;
+                    isQuestionMarked[x][y] = false;
+                    int previouslyPositionned = Integer.parseInt(this.gameFlags.getText());
+                    ++previouslyPositionned;
+                    this.gameFlags.setText(""+previouslyPositionned);
+                    
+                } else {
+                   
+                    gameTiles[x][y].setIcon(new ImageIcon(questionMarkImgContainer));
+                    isFlagged[x][y] = true;
+                    isQuestionMarked[x][y] = true;      
+                }
+                
             }
             else {
                 if (Integer.parseInt(this.gameFlags.getText())>0) {
                     gameTiles[x][y].setIcon(new ImageIcon(flagImgContainer));
                     isFlagged[x][y] = true;
+                    
                     int previouslyPositionned = Integer.parseInt(this.gameFlags.getText());
                     --previouslyPositionned;
                     this.gameFlags.setText(""+previouslyPositionned);
                 }
             }
+            
         }
     }
 
-    // VÈrifie si le nombre des cases montrÈes est Ègal au nombre de cases totales du jeu alors le joueur a effectivement gagnÈ
+    // V√©rifie si le nombre des cases montr√©es est √©gal au nombre de cases totales du jeu alors le joueur a effectivement gagn√©
     private boolean isSuccessfullyFinished() {
         return (this.tilesShowed) ==  (Math.pow(this.tilePosition.length, 2) - this.bombsInGame);
     }
 
-    // Fonction exÈcutÈe lorsqu'on appuie sur la case positionnÈe aux coordonnÈes (x,y)
+    // Fonction ex√©cut√©e lorsqu'on appuie sur la case positionn√©e aux coordonn√©es (x,y)
     public void tileClicked(int x, int y) {
         if(!isShowed[x][y] && !isFlagged[x][y]) {
             isShowed[x][y] = true;
@@ -278,7 +303,7 @@ public class Game extends JFrame {
                 
 
                     
-                    Object[] choices = {"RÈ-essayer", "Quitter"};
+                    Object[] choices = {"R√©-essayer", "Quitter"};
                     int overGame = JOptionPane.showOptionDialog(null,
                             "Oh nooon! Vous avez perdu", gameName,
                             JOptionPane.YES_NO_CANCEL_OPTION,
@@ -316,7 +341,7 @@ public class Game extends JFrame {
                     	
                         Object[] choicesW = {"Rejouer", "Quitter"};
                         int winner = JOptionPane.showOptionDialog(null,
-                                "Bravo, vous avez gagnÈ! \nVotre progression a bien ÈtÈ enregistrÈe!", gameName,
+                                "Bravo, vous avez gagn√©! \nVotre progression a bien √©t√© enregistr√©e!", gameName,
                                 JOptionPane.YES_NO_CANCEL_OPTION,
                                 JOptionPane.INFORMATION_MESSAGE,
                                 null,
@@ -334,7 +359,7 @@ public class Game extends JFrame {
                     }  
 
                     
-                    // Si c'est pas le cas on passe ‡ la case suivante
+                    // Si c'est pas le cas on passe √† la case suivante
                     for (int i = -1; i <= 1; i++) {
                     for (int j = -1; j <= 1; j++) {
                         try {
@@ -380,7 +405,7 @@ public class Game extends JFrame {
 
                     	Object[] choicesW = {"Rejouer", "Quitter"};
                         int winner = JOptionPane.showOptionDialog(null,
-                                "Bravo, vous avez gagnÈ! \nVotre progression a bien ÈtÈ enregistrÈe!", gameName,
+                                "Bravo, vous avez gagn√©! \nVotre progression a bien √©t√© enregistr√©e!", gameName,
                                 JOptionPane.YES_NO_CANCEL_OPTION,
                                 JOptionPane.INFORMATION_MESSAGE,
                                 null,
