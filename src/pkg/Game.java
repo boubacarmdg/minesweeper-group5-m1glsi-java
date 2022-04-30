@@ -39,8 +39,8 @@ public class Game extends JFrame {
 	    private Image flagImgContainer; // Conteneur de l'image du drapeau
 	    private Image bombImg; // Image de la bombe
 	    private Image bombImgContainer; // Conteneur de l'image de la bombe
-	    private Image questionMarkImg; // Image de la bombe
-	    private Image questionMarkImgContainer; // Conteneur de l'image de la bombe
+	    private Image questionMarkImg; // Image du point d'interrogation
+	    private Image questionMarkImgContainer; // Conteneur de l'image du point d'interrogation
 	
 	    // Customisation du jeu
 	    private Color borderColor = new Color(73, 162, 233); // Couleur de la bordure de la case
